@@ -1,6 +1,7 @@
 #lang forge/temporal
 
 option max_tracelength 2
+option min_tracelength 2
 
 abstract sig Boolean {}
 one sig True, False extends Boolean {}
