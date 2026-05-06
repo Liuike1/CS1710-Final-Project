@@ -22,11 +22,19 @@ one sig Cube {
     var tw: pfunc Slot -> Twist
 }
 
+pred totalTwistValid {
+    //adding a total twist conservation predicate for wellfFormed
+    //tOne implies 0 twist, so we do not add it to our sum 
+    // --> consider the solved state is all tOne, then if it was +1 the state mod3 would not be valid.
+    remainder[add[#{s: Slot | Cube.tw[s] = tTwo}, multiply[2,#{s: Slot | Cube.tw[s] = tThree}]],3] = 0
+}
+
 pred wellFormed {
     all s: Slot | one b: Block | Cube.occupy[s] = b
     all b: Block | one s: Slot | Cube.occupy[s] = b
 
     all s: Slot | one t: Twist | Cube.tw[s] = t
+    totalTwistValid
 }
 
 pred solved {
