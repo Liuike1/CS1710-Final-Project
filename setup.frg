@@ -1,7 +1,7 @@
 #lang forge/temporal
 
-option max_tracelength 2
-option min_tracelength 2
+option max_tracelength 3
+option min_tracelength 3
 
 option run_sterling "vis.js"
 
@@ -45,129 +45,242 @@ pred twoxTwoWellFormed{
     }
 }
 
-pred rotationRight{
-    all x, y: Int | {
-        (y in {0 + 1} and x = 1) implies {
-            Front.board'[x][y] = Top.board[x][y]
-            Bottom.board'[x][y] = Front.board[x][y]
-            Back.board'[x][y] = Bottom.board[x][y]
-            Top.board'[x][y] = Bottom.board[x][y]
+pred faceSolved[f: Face]{
+    all x1, y1, x2, y2: Int |
+        (x1 in {0 + 1} and y1 in {0 + 1}) and 
+        (x2 in {0 + 1} and y2 in {0 + 1}) implies 
+        f.board[x1][y1] = f.board[x2][y2]
+}
+pred solved{
+    twoxTwoWellFormed
+    faceSolved[Front]    
+    faceSolved[Back] 
+    faceSolved[Top] 
+    faceSolved[Bottom] 
+    faceSolved[Left] 
+    faceSolved[Right] 
+    
+}
+pred initSolved{
+    twoxTwoWellFormed
+    all x,y: Int |
+        x in {0 + 1} and y in {0 + 1}
+        implies {
+            Front.board[x][y] = 1
+            Back.board[x][y] = 2
+            Top.board[x][y] = 3
+            Bottom.board[x][y] = 4
+            Left.board[x][y] = 5
+            Right.board[x][y] = 6
         }
+}
 
-        (y in {0 + 1} and x in {0 + 1}) implies {
-            Left.board'[x][y] = Left.board[x][y]
-        }
+pred scrambled{
+    twoxTwoWellFormed
+    not solved
+}
+pred sameCell[f: Face, x: Int, y: Int] {
+    f.board'[x][y] = f.board[x][y]
+}
 
-        Right.board'[0][0]= Right.board[0][1]
-        Right.board'[0][1] = Right.board[1][1]
-        Right.board'[1][1] = Right.board[1][0]
-        Right.board'[1][0] = Right.board[0][0]
+pred sameFace[f: Face] {
+    all x, y: Int |
+        x in {0 + 1} and y in {0 + 1}
+        implies f.board'[x][y] = f.board[x][y]
+}
+
+pred sameExceptCol[f: Face, col: Int] {
+    all x, y: Int |
+        x in {0 + 1} and y in {0 + 1} and x != col
+        implies f.board'[x][y] = f.board[x][y]
+}
+
+pred sameExceptRow[f: Face, row: Int] {
+    all x, y: Int |
+        x in {0 + 1} and y in {0 + 1} and y != row
+        implies f.board'[x][y] = f.board[x][y]
+}
+pred rotateFace[f: Face] {
+    f.board'[0][0] = f.board[0][1]
+    f.board'[0][1] = f.board[1][1]
+    f.board'[1][1] = f.board[1][0]
+    f.board'[1][0] = f.board[0][0]
+}
+pred validTransition {
+    twoxTwoWellFormed
+    next_state {
+        twoxTwoWellFormed
     }
+}
+pred rotationRight {
+    validTransition
+    all y: Int | y in {0 + 1} implies {
+        // slide pieces across non-opp. faces
+        Front.board'[1][y] = Top.board[1][y]
+        Bottom.board'[1][y] = Front.board[1][y]
+        Back.board'[1][y] = Bottom.board[1][y]
+        Top.board'[1][y] = Back.board[1][y]
+    }
+
+    // opposite face is unchanged
+    sameFace[Left]
+
+    // columns on adjacent faces are unchanged
+    sameExceptCol[Front, 1]
+    sameExceptCol[Bottom, 1]
+    sameExceptCol[Back, 1]
+    sameExceptCol[Top, 1]
+
+    // Rotate the face 
+    rotateFace[Right]
 }
 
 pred rotationLeft{
-    all x, y: Int | {
-        (y in {0 + 1} and x = 0) implies {
-            Front.board'[x][y] = Top.board[x][y]
-            Bottom.board'[x][y] = Front.board[x][y]
-            Back.board'[x][y] = Bottom.board[x][y]
-            Top.board'[x][y] = Bottom.board[x][y]
-        }
-
-        (y in {0 + 1} and x in {0 + 1}) implies {
-            Right.board'[x][y] = Right.board[x][y]
-        }
-
-        Left.board'[0][0] = Left.board[0][1]
-        Left.board'[0][1] = Left.board[1][1]
-        Left.board'[1][1] = Left.board[1][0]
-        Left.board'[1][0] = Left.board[0][0]
+    validTransition
+    all y: Int | 
+        (y in {0 + 1} ) implies {
+            // slide pieces across non-opp. faces
+            Front.board'[0][y] = Bottom.board[0][y]
+            Top.board'[0][y] = Front.board[0][y]
+            Back.board'[0][y] = Top.board[0][y]
+            Bottom.board'[0][y] = Back.board[0][y]
     }
+    // opposite face is unchanged
+    sameFace[Right]
+
+    // columns on adjacent faces are unchanged
+    sameExceptCol[Front, 0]
+    sameExceptCol[Bottom, 0]
+    sameExceptCol[Back, 0]
+    sameExceptCol[Top, 0]
+
+    // Rotate the face 
+    rotateFace[Left]
 }
 
 pred rotationFront{
-    all x, y: Int | {
-        (y in {0 + 1} and x = 1) implies {
-            Left.board'[x][y] = Top.board[x][y]
-            Bottom.board'[x][y] = Left.board[x][y]
-            Right.board'[x][y] = Bottom.board[x][y]
-            Top.board'[x][y] = Right.board[x][y]
-        }
-
-        (y in {0 + 1} and x in {0 + 1}) implies {
-            Back.board'[x][y] = Back.board[x][y]
-        }
-
-        Front.board'[0][0] = Front.board[0][1]
-        Front.board'[0][1] = Front.board[1][1]
-        Front.board'[1][1] = Front.board[1][0]
-        Front.board'[1][0] = Front.board[0][0]
+    validTransition
+    all p: Int | 
+        (p in {0 + 1} ) implies {
+            // slide pieces across non-opp. faces
+            Top.board'[p][1] = Left.board[1][p]
+            Right.board'[0][p] = Top.board[p][1]
+            Bottom.board'[p][0] = Right.board[0][p]
+            Left.board'[1][p] = Bottom.board[p][0]
     }
+    // opposite face is unchanged
+    sameFace[Back]
+
+    // columns on adjacent faces are unchanged
+    sameExceptRow[Top, 1]
+    sameExceptRow[Bottom, 0]
+    sameExceptCol[Left, 1]
+    sameExceptCol[Right, 0]
+
+    // Rotate the face 
+    rotateFace[Front]
 }
 
 pred rotationBack{
-    all x, y: Int | {
-        (y in {0 + 1} and x = 1) implies {
-            Left.board'[x][y] = Top.board[x][y]
-            Bottom.board'[x][y] = Left.board[x][y]
-            Right.board'[x][y] = Bottom.board[x][y]
-            Top.board'[x][y] = Right.board[x][y]
-        }
-
-        (y in {0 + 1} and x in {0 + 1}) implies {
-            Front.board'[x][y] = Front.board[x][y]
-        }
-
-        Back.board'[0][0] = Back.board[0][1]
-        Back.board'[0][1] = Back.board[1][1]
-        Back.board'[1][1] = Back.board[1][0]
-        Back.board'[1][0] = Back.board[0][0]
+    validTransition
+    all p: Int | 
+        (p in {0 + 1} ) implies {
+            // slide pieces across non-opp. faces
+            Top.board'[p][0] = Right.board[1][p]
+            Left.board'[0][p] = Top.board[p][0]
+            Bottom.board'[p][1] = Left.board[0][p]
+            Right.board'[1][p] = Bottom.board[p][1]
     }
+    // opposite face is unchanged
+    sameFace[Front]
+
+    // columns on adjacent faces are unchanged
+    sameExceptRow[Top, 0]
+    sameExceptRow[Bottom, 1]
+    sameExceptCol[Left, 0]
+    sameExceptCol[Right, 1]
+
+    // Rotate the face 
+    rotateFace[Back]
 }
 
 pred rotationTop{
-    all x, y: Int | {
-        (y in {0 + 1} and x = 1) implies {
-            Left.board'[x][y] = Back.board[x][y]
-            Front.board'[x][y] = Left.board[x][y]
-            Right.board'[x][y] = Front.board[x][y]
-            Back.board'[x][y] = Right.board[x][y]
-        }
-
-        (y in {0 + 1} and x in {0 + 1}) implies {
-            Bottom.board'[x][y] = Bottom.board[x][y]
-        }
-
-        Top.board'[0][0] = Top.board[0][1]
-        Top.board'[0][1] = Top.board[1][1]
-        Top.board'[1][1] = Top.board[1][0]
-        Top.board'[1][0] = Top.board[0][0]
+    validTransition
+    all x: Int | 
+        (x in {0 + 1} ) implies {
+            // slide pieces across non-opp. faces
+            Front.board'[x][0] = Right.board[x][0]
+            Right.board'[x][0] = Back.board[x][0]
+            Back.board'[x][0] = Left.board[x][0]
+            Left.board'[x][0] = Front.board[x][0]
     }
+    // opposite face is unchanged
+    sameFace[Bottom]
+
+    // columns on adjacent faces are unchanged
+    sameExceptRow[Front, 0]
+    sameExceptRow[Left, 0]
+    sameExceptRow[Back, 0]
+    sameExceptRow[Right, 0]
+
+    // Rotate the face 
+    rotateFace[Top]
 }
 
 pred rotationBottom{
-    all x, y: Int | {
-        (y in {0 + 1} and x = 1) implies {
-            Left.board'[x][y] = Back.board[x][y]
-            Front.board'[x][y] = Left.board[x][y]
-            Right.board'[x][y] = Front.board[x][y]
-            Back.board'[x][y] = Right.board[x][y]
-        }
+    validTransition
+    all x: Int | 
+        (x in {0 + 1} ) implies {
+            // slide pieces across non-opp. faces
+            Front.board'[x][1] = Right.board[x][1]
+            Right.board'[x][1] = Back.board[x][1]
+            Back.board'[x][1] = Left.board[x][1]
+            Left.board'[x][1] = Front.board[x][1]
+    }
+    // opposite face is unchanged
+    sameFace[Top]
 
-        (y in {0 + 1} and x in {0 + 1}) implies {
-            Top.board'[x][y] = Top.board[x][y]
-        }
+    // columns on adjacent faces are unchanged
+    sameExceptRow[Front, 1]
+    sameExceptRow[Left, 1]
+    sameExceptRow[Back, 1]
+    sameExceptRow[Right, 1]
 
-        Bottom.board'[0][0] = Bottom.board[0][1]
-        Bottom.board'[0][1] = Bottom.board[1][1]
-        Bottom.board'[1][1] = Bottom.board[1][0]
-        Bottom.board'[1][0] = Bottom.board[0][0]
+    // Rotate the face 
+    rotateFace[Bottom]
+}
+// assert {
+//     initSolved
+//     not solved
+// } is unsat
+
+pred oneMove{
+    rotationBottom or rotationTop or rotationRight or rotationLeft or rotationFront or rotationBack
+}
+pred RubiksTraces{
+    initSolved
+    always(twoxTwoWellFormed)
+    always(oneMove)
+}
+pred scrambleTwice {
+    initSolved
+
+    oneMove
+
+    next_state {
+        twoxTwoWellFormed
+        oneMove
+    }
+
+    next_state {
+        next_state {
+            scrambled
+        }
     }
 }
 
-pred RubiksTraces{
-    always(twoxTwoWellFormed)
-    always(rotationBottom or rotationTop or rotationRight or rotationLeft or rotationFront or rotationBack)
+run {
+    scrambleTwice
 }
-
-run{RubiksTraces}
+// 
+//
