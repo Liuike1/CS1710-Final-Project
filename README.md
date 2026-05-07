@@ -44,6 +44,7 @@ This will create a random permutation of a cube (a scramble), and a set of instr
 For a 3x3 cube, paste the permutation and solution strings into the constants at the top of the file multi_visualizer3x3.py.
 
 For a 2x2 cube, update the variables at the bottom of the file in main.
+
 *This will create 200+ pngs in a local folder, so not recommended unless you are very curious about the visualizer*
 
 ## AI Usage
