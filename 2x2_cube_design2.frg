@@ -3,7 +3,7 @@
 option max_tracelength 11
 option min_tracelength 11
 
-option run_sterling "vis_ver2.js"
+option run_sterling "design2_vis.js"
 
 abstract sig Slot {}
 one sig UFR, UFL, UBR, UBL, DFR, DFL, DBR, DBL extends Slot {}
@@ -30,14 +30,17 @@ pred totalTwistValid {
 }
 
 pred wellFormed {
+    // bijective correspondance between slot and block
     all s: Slot | one b: Block | Cube.occupy[s] = b
     all b: Block | one s: Slot | Cube.occupy[s] = b
 
+    // each slot must have one (non-unique) twist
     all s: Slot | one t: Twist | Cube.tw[s] = t
     totalTwistValid
 }
 
 pred solved {
+    // default state via construction
     Cube.occupy[UFR] = bUFR
     Cube.occupy[UFL] = bUFL
     Cube.occupy[UBR] = bUBR
@@ -59,6 +62,7 @@ pred twistUnchanged[changed: set Slot] {
 }
 
 fun twistUpdate[t: Twist, tu: TwistUpdate]: one Twist {
+    // helper function simulating integer addition mod 3
     (t = tOne and tu = TUOne) => tTwo else
     (t = tOne and tu = TUTwo) => tThree else
     (t = tTwo and tu = TUOne) => tThree else
@@ -67,6 +71,7 @@ fun twistUpdate[t: Twist, tu: TwistUpdate]: one Twist {
     tTwo
 }
 
+// rotation preds start
 pred rotateU {
     Cube.occupy'[UFR] = Cube.occupy[UFL]
     Cube.occupy'[UFL] = Cube.occupy[UBL]
@@ -301,6 +306,7 @@ pred rotateB3 {
     occupyUnchanged[UBR + UBL + DBL + DBR]
     twistUnchanged[UBR + UBL + DBL + DBR]
 }
+// rotation preds end
 
 pred move{
     rotateU or rotateD or rotateR or rotateL or rotateF or rotateB or
@@ -322,6 +328,7 @@ pred notSolvable{
     always unsolvedSteps
 }
 
+// example to generate a 11 step trace
 pred elevenLongSolvedOnlyAtEnd {
     unsolvedSteps
     next_state {
@@ -356,6 +363,8 @@ pred elevenLongSolvedOnlyAtEnd {
     }
 }
 
+elevenLongTrace: run {elevenLongSolvedOnlyAtEnd} for 6 Int
+
 pred hardStartExample{
     Cube.occupy[UFR] = bDFL
     Cube.occupy[UFL] = bDBR
@@ -382,5 +391,4 @@ pred solveExample{
     eventually(solved)
 }
 
-// run {elevenLongSolvedOnlyAtEnd} for 6 Int
-run{solveExample}
+exampleCube: run{solveExample}

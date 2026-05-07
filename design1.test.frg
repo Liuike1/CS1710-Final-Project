@@ -1,8 +1,6 @@
 #lang forge/temporal
 
-open "setup.frg"
-
-
+open "2x2_cube_design1.frg"
 
 // currently, our well formed predicate does not constrict our cube to solvable states:
 // We probably will have to add predicates dictating that the total twist of a well-formed cube is

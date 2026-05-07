@@ -3,10 +3,8 @@
 option max_tracelength 3
 option min_tracelength 3
 
-option run_sterling "vis.js"
+option run_sterling "design1_vis.js"
 
-abstract sig Boolean {}
-one sig True, False extends Boolean {}
 one sig Cube{
     front: one Face,
     back: one Face,

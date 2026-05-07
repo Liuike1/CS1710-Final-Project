@@ -1,6 +1,6 @@
 #lang forge/temporal
 
-open "setup_ver2.frg"
+open "2x2_cube_design2.frg"
 
 
 test suite for totalTwistValid {
