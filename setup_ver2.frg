@@ -157,36 +157,161 @@ pred rotateB {
     twistUnchanged[UBR + UBL + DBL + DBR]
 }
 
-pred oneStep {
-    wellFormed
-    (rotateU or rotateD or rotateR or rotateL or rotateF or rotateB)
-    next_state wellFormed
+pred rotateU2 {
+    Cube.occupy'[UFR] = Cube.occupy[UBL]
+    Cube.occupy'[UFL] = Cube.occupy[UBR]
+    Cube.occupy'[UBL] = Cube.occupy[UFR]
+    Cube.occupy'[UBR] = Cube.occupy[UFL]
+    Cube.tw'[UFR] = Cube.tw[UBL]
+    Cube.tw'[UFL] = Cube.tw[UBR]
+    Cube.tw'[UBL] = Cube.tw[UFR]
+    Cube.tw'[UBR] = Cube.tw[UFL]
+    occupyUnchanged[UFR + UFL + UBL + UBR]
+    twistUnchanged[UFR + UFL + UBL + UBR]
 }
-
-pred oneAwayFromSolved{
-    wellFormed
-    (rotateU or rotateD or rotateR or rotateL or rotateF or rotateB)
-    next_state (solved and wellFormed)
+pred rotateU3 {
+    Cube.occupy'[UFR] = Cube.occupy[UBR]
+    Cube.occupy'[UFL] = Cube.occupy[UFR]
+    Cube.occupy'[UBL] = Cube.occupy[UFL]
+    Cube.occupy'[UBR] = Cube.occupy[UBL]
+    Cube.tw'[UFR] = Cube.tw[UBR]
+    Cube.tw'[UFL] = Cube.tw[UFR]
+    Cube.tw'[UBL] = Cube.tw[UFL]
+    Cube.tw'[UBR] = Cube.tw[UBL]
+    occupyUnchanged[UFR + UFL + UBL + UBR]
+    twistUnchanged[UFR + UFL + UBL + UBR]
+}
+pred rotateD2 {
+    Cube.occupy'[DFR] = Cube.occupy[DBL]
+    Cube.occupy'[DFL] = Cube.occupy[DBR]
+    Cube.occupy'[DBL] = Cube.occupy[DFR]
+    Cube.occupy'[DBR] = Cube.occupy[DFL]
+    Cube.tw'[DFR] = Cube.tw[DBL]
+    Cube.tw'[DFL] = Cube.tw[DBR]
+    Cube.tw'[DBL] = Cube.tw[DFR]
+    Cube.tw'[DBR] = Cube.tw[DFL]
+    occupyUnchanged[DFR + DFL + DBL + DBR]
+    twistUnchanged[DFR + DFL + DBL + DBR]
+}
+pred rotateD3 {
+    Cube.occupy'[DFR] = Cube.occupy[DBR]
+    Cube.occupy'[DFL] = Cube.occupy[DFR]
+    Cube.occupy'[DBL] = Cube.occupy[DFL]
+    Cube.occupy'[DBR] = Cube.occupy[DBL]
+    Cube.tw'[DFR] = Cube.tw[DBR]
+    Cube.tw'[DFL] = Cube.tw[DFR]
+    Cube.tw'[DBL] = Cube.tw[DFL]
+    Cube.tw'[DBR] = Cube.tw[DBL]
+    occupyUnchanged[DFR + DFL + DBL + DBR]
+    twistUnchanged[DFR + DFL + DBL + DBR]
+}
+pred rotateR2 {
+    Cube.occupy'[UFR] = Cube.occupy[DBR]
+    Cube.occupy'[DFR] = Cube.occupy[UBR]
+    Cube.occupy'[DBR] = Cube.occupy[UFR]
+    Cube.occupy'[UBR] = Cube.occupy[DFR]
+    Cube.tw'[UFR] = Cube.tw[DBR]
+    Cube.tw'[DFR] = Cube.tw[UBR]
+    Cube.tw'[DBR] = Cube.tw[UFR]
+    Cube.tw'[UBR] = Cube.tw[DFR]
+    occupyUnchanged[UFR + DFR + DBR + UBR]
+    twistUnchanged[UFR + DFR + DBR + UBR]
+}
+pred rotateR3 {
+    Cube.occupy'[UFR] = Cube.occupy[UBR]
+    Cube.occupy'[DFR] = Cube.occupy[UFR]
+    Cube.occupy'[DBR] = Cube.occupy[DFR]
+    Cube.occupy'[UBR] = Cube.occupy[DBR]
+    Cube.tw'[UFR] = twistUpdate[Cube.tw[UBR], TUTwo]
+    Cube.tw'[DFR] = twistUpdate[Cube.tw[UFR], TUOne]
+    Cube.tw'[DBR] = twistUpdate[Cube.tw[DFR], TUTwo]
+    Cube.tw'[UBR] = twistUpdate[Cube.tw[DBR], TUOne]
+    occupyUnchanged[UFR + DFR + DBR + UBR]
+    twistUnchanged[UFR + DFR + DBR + UBR]
+}
+pred rotateL2 {
+    Cube.occupy'[UFL] = Cube.occupy[DBL]
+    Cube.occupy'[DFL] = Cube.occupy[UBL]
+    Cube.occupy'[DBL] = Cube.occupy[UFL]
+    Cube.occupy'[UBL] = Cube.occupy[DFL]
+    Cube.tw'[UFL] = Cube.tw[DBL]
+    Cube.tw'[DFL] = Cube.tw[UBL]
+    Cube.tw'[DBL] = Cube.tw[UFL]
+    Cube.tw'[UBL] = Cube.tw[DFL]
+    occupyUnchanged[UFL + DFL + DBL + UBL]
+    twistUnchanged[UFL + DFL + DBL + UBL]
+}
+pred rotateL3 {
+    Cube.occupy'[UFL] = Cube.occupy[DFL]
+    Cube.occupy'[DFL] = Cube.occupy[DBL]
+    Cube.occupy'[DBL] = Cube.occupy[UBL]
+    Cube.occupy'[UBL] = Cube.occupy[UFL]
+    Cube.tw'[UFL] = twistUpdate[Cube.tw[DFL], TUOne]
+    Cube.tw'[DFL] = twistUpdate[Cube.tw[DBL], TUTwo]
+    Cube.tw'[DBL] = twistUpdate[Cube.tw[UBL], TUOne]
+    Cube.tw'[UBL] = twistUpdate[Cube.tw[UFL], TUTwo]
+    occupyUnchanged[UFL + DFL + DBL + UBL]
+    twistUnchanged[UFL + DFL + DBL + UBL]
+}
+pred rotateF2 {
+    Cube.occupy'[UFR] = Cube.occupy[DFL]
+    Cube.occupy'[DFR] = Cube.occupy[UFL]
+    Cube.occupy'[DFL] = Cube.occupy[UFR]
+    Cube.occupy'[UFL] = Cube.occupy[DFR]
+    Cube.tw'[UFR] = Cube.tw[DFL]
+    Cube.tw'[DFR] = Cube.tw[UFL]
+    Cube.tw'[DFL] = Cube.tw[UFR]
+    Cube.tw'[UFL] = Cube.tw[DFR]
+    occupyUnchanged[UFR + DFR + DFL + UFL]
+    twistUnchanged[UFR + DFR + DFL + UFL]
+}
+pred rotateF3 {
+    Cube.occupy'[UFR] = Cube.occupy[DFR]
+    Cube.occupy'[DFR] = Cube.occupy[DFL]
+    Cube.occupy'[DFL] = Cube.occupy[UFL]
+    Cube.occupy'[UFL] = Cube.occupy[UFR]
+    Cube.tw'[UFR] = twistUpdate[Cube.tw[DFR], TUOne]
+    Cube.tw'[DFR] = twistUpdate[Cube.tw[DFL], TUTwo]
+    Cube.tw'[DFL] = twistUpdate[Cube.tw[UFL], TUOne]
+    Cube.tw'[UFL] = twistUpdate[Cube.tw[UFR], TUTwo]
+    occupyUnchanged[UFR + DFR + DFL + UFL]
+    twistUnchanged[UFR + DFR + DFL + UFL]
+}
+pred rotateB2 {
+    Cube.occupy'[UBR] = Cube.occupy[DBL]
+    Cube.occupy'[UBL] = Cube.occupy[DBR]
+    Cube.occupy'[DBL] = Cube.occupy[UBR]
+    Cube.occupy'[DBR] = Cube.occupy[UBL]
+    Cube.tw'[UBR] = Cube.tw[DBL]
+    Cube.tw'[UBL] = Cube.tw[DBR]
+    Cube.tw'[DBL] = Cube.tw[UBR]
+    Cube.tw'[DBR] = Cube.tw[UBL]
+    occupyUnchanged[UBR + UBL + DBL + DBR]
+    twistUnchanged[UBR + UBL + DBL + DBR]
+}
+pred rotateB3 {
+    Cube.occupy'[UBR] = Cube.occupy[UBL]
+    Cube.occupy'[UBL] = Cube.occupy[DBL]
+    Cube.occupy'[DBL] = Cube.occupy[DBR]
+    Cube.occupy'[DBR] = Cube.occupy[UBR]
+    Cube.tw'[UBR] = twistUpdate[Cube.tw[UBL], TUTwo]
+    Cube.tw'[UBL] = twistUpdate[Cube.tw[DBL], TUOne]
+    Cube.tw'[DBL] = twistUpdate[Cube.tw[DBR], TUTwo]
+    Cube.tw'[DBR] = twistUpdate[Cube.tw[UBR], TUOne]
+    occupyUnchanged[UBR + UBL + DBL + DBR]
+    twistUnchanged[UBR + UBL + DBL + DBR]
 }
 
 pred move{
-    (rotateU or rotateD or rotateR or rotateL or rotateF or rotateB)
+    rotateU or rotateD or rotateR or rotateL or rotateF or rotateB or
+    rotateU2 or rotateU3 or rotateD2 or rotateD3 or rotateR2 or rotateR3 or
+    rotateL2 or rotateL3 or rotateF2 or rotateF3 or rotateB2 or rotateB3
 }
 
-pred fourToSolved {
-    wellFormed and not solved
+pred step{
+    wellFormed
     move
-    next_state {
-        wellFormed and not solved
-        move
-        next_state {
-            wellFormed and not solved
-            move
-            next_state {
-                wellFormed and not solved
-                move
-                next_state{solved and wellFormed}
-}}}}
+}
 
 pred unsolvedSteps{
     wellFormed and not solved
@@ -231,5 +356,31 @@ pred elevenLongSolvedOnlyAtEnd {
     }
 }
 
-// run {elevenLongSolvedOnlyAtEnd}
-run {elevenLongSolvedOnlyAtEnd} for 6 Int
+pred hardStartExample{
+    Cube.occupy[UFR] = bDFL
+    Cube.occupy[UFL] = bDBR
+    Cube.occupy[UBR] = bUFR
+    Cube.occupy[UBL] = bUFL
+    Cube.occupy[DFR] = bUBL
+    Cube.occupy[DFL] = bDFR
+    Cube.occupy[DBR] = bUBR
+    Cube.occupy[DBL] = bDBL
+
+    Cube.tw[UFR] = tOne
+    Cube.tw[UFL] = tTwo
+    Cube.tw[UBR] = tOne
+    Cube.tw[UBL] = tOne
+    Cube.tw[DFR] = tOne
+    Cube.tw[DFL] = tOne
+    Cube.tw[DBR] = tThree
+    Cube.tw[DBL] = tOne
+}
+
+pred solveExample{
+    hardStartExample
+    always(step)
+    eventually(solved)
+}
+
+// run {elevenLongSolvedOnlyAtEnd} for 6 Int
+run{solveExample}
