@@ -25,7 +25,26 @@ GAP instances approach solving slightly differently.  Since every permutation of
 ## Tradeoffs from GAP to Forge
 Because we are able to choose the specific tracelength for solutions in Forge, the 8 corner model is able to find cubes that can be solved within a given number of steps.  GAP is not particularly built for this use case, so Forge does offer some benefits.  This is an interesting application of the model that we did not initially consider.  Additionally, Forge is better suited to finding optimal [^3] solutions to our cubes, while GAP just finds some sequence of moves which is a solution.  
 
+## How to run GAP
 
+We typically ran our GAP code through the dedicated GAP terminal (installation instructions can be found on the GAP page), but the code can also be run on a web browser with the following instructions (instructions generated with AI).
+
+Instructions for running GAP:
+
+    Go to the SageMathCell website (sagecell.sagemath.org). This is an open-source math server hosted by the University of Washington.
+
+    In the bottom right corner of the text box, click the Language dropdown menu and change it from Sage to GAP.
+
+    Copy and paste the entire contents of rubiks.g or rubiks3x3.g file into the text box.
+
+    Click the Evaluate button.
+
+This will create a random permutation of a cube (a scramble), and a set of instructions to solve the scramble.
+
+For a 3x3 cube, paste the permutation and solution strings into the constants at the top of the file multi_visualizer3x3.py.
+
+For a 2x2 cube, update the variables at the bottom of the file in main.
+*This will create 200+ pngs in a local folder, so not recommended unless you are very curious about the visualizer*
 
 ## AI Usage
 AI was used to generate visualizers, but never for development of our models.
