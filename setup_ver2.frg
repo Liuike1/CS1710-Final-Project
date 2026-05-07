@@ -231,5 +231,5 @@ pred elevenLongSolvedOnlyAtEnd {
     }
 }
 
-
-run {elevenLongSolvedOnlyAtEnd}
+// run {elevenLongSolvedOnlyAtEnd}
+run {elevenLongSolvedOnlyAtEnd} for 6 Int
