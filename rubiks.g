@@ -14,13 +14,7 @@
 # Look at Singmaster Notation above for more details.
 
 
-#approach -> 
-    # - define in forge what are the necessary conditions for well formed
-    # - use GAP groups to define every permutation of legal moves
-    # - compare our well formed conditions to the gap group and show that they are equal
-
-
-#I need to attach the diagram that I am using for 2x2 and 3x3 since the number assignments are arbitrary
+#Diagrams for how the 2x2 and 3x3 were mapped out are both included as pngs under their respective name.
 
 #2x2:
 # We define all 6 rotations over our 24 spaces
