@@ -1,7 +1,7 @@
 #lang forge/temporal
 
-option max_tracelength 11
-option min_tracelength 11
+option max_tracelength 12
+option min_tracelength 12
 
 option run_sterling "design2_vis.js"
 
@@ -329,7 +329,7 @@ pred notSolvable{
 }
 
 // example to generate a 11 step trace
-pred elevenLongSolvedOnlyAtEnd {
+pred twelveLongSolvedOnlyAtEnd {
     unsolvedSteps
     next_state {
         unsolvedSteps
@@ -350,7 +350,10 @@ pred elevenLongSolvedOnlyAtEnd {
                                     next_state {
                                         unsolvedSteps
                                         next_state {
-                                            wellFormed and solved
+                                            unsolvedSteps
+                                            next_state {
+                                                wellFormed and solved
+                                            }
                                         }
                                     }
                                 }
@@ -363,7 +366,7 @@ pred elevenLongSolvedOnlyAtEnd {
     }
 }
 
-elevenLongTrace: run {elevenLongSolvedOnlyAtEnd} for 6 Int
+twelveTrace: run {twelveLongSolvedOnlyAtEnd} for 6 Int
 
 pred hardStartExample{
     Cube.occupy[UFR] = bDFL
@@ -391,4 +394,4 @@ pred solveExample{
     eventually(solved)
 }
 
-exampleCube: run{solveExample}
+// exampleCube: run{solveExample}

@@ -247,10 +247,6 @@ pred rotationBottom{
     // Rotate the face 
     rotateFace[Bottom]
 }
-// assert {
-//     initSolved
-//     not solved
-// } is unsat
 
 pred oneMove{
     rotationBottom or rotationTop or rotationRight or rotationLeft or rotationFront or rotationBack
